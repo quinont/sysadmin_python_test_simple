@@ -5,3 +5,5 @@ test:
 	PYTHONPATH=./src python3 -m pytest tests/ -v
 	PYTHONPATH=./src python3 -m pytest tests/ --cov . --cov-fail-under 80
 
+run:
+	PYTHONPATH=. python src/main.py
