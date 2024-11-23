@@ -1,0 +1,17 @@
+apiVersion: v1
+data:
+  otro.html: |
+    Este es el archivo de compras
+    Esto no lo modifiques por favor, me gusta los saltos de linea...
+
+
+    Aca esta todas las compras que siempre necesitaste.
+
+    Saludos coordiales.
+kind: ConfigMap
+metadata:
+  name: compras-config-2
+  namespace: compras
+  labels:
+    syntax-checking: "false"
+    config-type: file

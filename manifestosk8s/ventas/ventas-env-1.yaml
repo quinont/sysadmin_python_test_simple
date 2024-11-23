@@ -1,0 +1,12 @@
+apiVersion: v1
+data:
+  OTRAcosa: Otra configuracion necesaria\n\n
+  SALIDA: todoOK
+  miconfig: "1234"
+kind: ConfigMap
+metadata:
+  name: ventas-env-1
+  namespace: ventas
+  labels:
+    syntax-checking: "true"
+    config-type: env

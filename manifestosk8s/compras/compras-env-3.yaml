@@ -1,0 +1,8 @@
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: compras-env-3
+  namespace: compras
+  labels:
+    syntax-checking: "true"
+    config-type: env

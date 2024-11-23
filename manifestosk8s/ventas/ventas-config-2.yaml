@@ -1,0 +1,16 @@
+apiVersion: v1
+data:
+  index.html: |
+    Esto es OTRO archivo de ventas.
+    No me modifiques por favor :D
+
+    espero que te guste lo que vendemos.
+
+    Gracias
+kind: ConfigMap
+metadata:
+  name: ventas-config-2
+  namespace: ventas
+  labels:
+    syntax-checking: "No"
+    config-type: file

@@ -1,0 +1,12 @@
+apiVersion: v1
+data:
+  ESTABIEN: todoOK
+  NoMayuscula: arreglalo por favoR
+  SALTODELINEA: Otra configuracion necesaria\n\n
+kind: ConfigMap
+metadata:
+  name: compras-env-1
+  namespace: compras
+  labels:
+    syntax-checking: "true"
+    config-type: env

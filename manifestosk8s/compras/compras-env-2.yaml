@@ -1,0 +1,12 @@
+apiVersion: v1
+data:
+  ESTABIEN: No problemo
+  SoyUnaVariable: es una linda variable
+  DejameTenerSaltosDElinea: Otra configuracion necesaria\n\n
+kind: ConfigMap
+metadata:
+  name: compras-env-2
+  namespace: compras
+  labels:
+    syntax-checking: "NotToday"
+    config-type: env

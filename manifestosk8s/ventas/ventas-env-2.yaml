@@ -1,0 +1,9 @@
+apiVersion: v1
+data:
+  soyunavariable: "asi es, nunca cambies"
+kind: ConfigMap
+metadata:
+  name: ventas-env-2
+  namespace: ventas
+  labels:
+    config-type: env
