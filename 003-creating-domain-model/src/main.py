@@ -3,23 +3,25 @@
 from src.configmap_source import ConfigMapSource
 from src.kubernetes_adapter import KubernetesAdapter
 
+
 def main(configmap_source: ConfigMapSource):
-    
     namespaces = configmap_source.list_namespaces()
 
     for namespace in namespaces:
         configmaps = configmap_source.list_configmaps(namespace)
         for configmap in configmaps:
-            labels = configmap.labels or {}
-
-            if labels.get("syntax-checking") != "true":
+            if configmap.labels.get("syntax-checking") != "true":
                 continue
 
-            config_type = labels.get("config-type")
+            config_type = configmap.labels.get("config-type")
             if config_type == "file":
                 if len(configmap.data) > 0:
                     first_key = list(configmap.data.keys())[0]
-                    configmap.data = {first_key: configmap.data[first_key].replace("\\n\\n", "\\n").replace("\n\n", "\n")}
+                    configmap.data = {
+                        first_key: configmap.data[first_key]
+                        .replace("\\n\\n", "\\n")
+                        .replace("\n\n", "\n")
+                    }
                 else:
                     configmap.data = {"index.html": "archivo nuevo"}
 
@@ -38,7 +40,7 @@ def main(configmap_source: ConfigMapSource):
 
             print(f"Modified ConfigMap: {configmap.name}")
             configmap_source.update_configmap(configmap)
-        
+
 
 if __name__ == "__main__":
     kubernetes_configmap_source = KubernetesAdapter()

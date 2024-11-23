@@ -7,8 +7,11 @@ from src.main import main
 
 @pytest.fixture
 def mock_kubernetes():
-    with patch("src.kubernetes_adapter.config.load_kube_config") as mock_load_kube_config, \
-         patch("src.kubernetes_adapter.client.CoreV1Api") as mock_core_v1_api:
+    with patch(
+        "src.kubernetes_adapter.config.load_kube_config"
+    ) as mock_load_kube_config, patch(
+        "src.kubernetes_adapter.client.CoreV1Api"
+    ) as mock_core_v1_api:
 
         # Mock del CoreV1Api
         mock_api_instance = MagicMock()
@@ -21,7 +24,9 @@ def mock_kubernetes():
         }
 
 
-def test_configmap_with_systax_checking_and_config_file_without_double_new_line(mock_kubernetes):
+def test_configmap_with_systax_checking_and_config_file_without_double_new_line(
+    mock_kubernetes,
+):
     mock_api_instance = mock_kubernetes["mock_api_instance"]
 
     # Workaround para poder agregar name al MagicMock
@@ -30,10 +35,15 @@ def test_configmap_with_systax_checking_and_config_file_without_double_new_line(
     mock_api_instance.list_namespace.return_value.items = [namespace1]
 
     # Workaround para poder agregar name al MagicMock
-    configmap1 = MagicMock(metadata=MagicMock(labels={"syntax-checking": "true", "config-type": "file"}), data={"key": "value"})
+    configmap1 = MagicMock(
+        metadata=MagicMock(labels={"syntax-checking": "true", "config-type": "file"}),
+        data={"key": "value"},
+    )
     configmap1.metadata.name = "cm1"
     configmap1.metadata.namespace = "Namespace1"
-    mock_api_instance.list_namespaced_config_map.return_value = MagicMock(items=[configmap1])
+    mock_api_instance.list_namespaced_config_map.return_value = MagicMock(
+        items=[configmap1]
+    )
 
     existing_cm = MagicMock()
     existing_cm.data = {}
@@ -47,24 +57,23 @@ def test_configmap_with_systax_checking_and_config_file_without_double_new_line(
     mock_kubernetes["mock_load_kube_config"].assert_called_once()
 
     mock_api_instance.read_namespaced_config_map.assert_called_once_with(
-        name="cm1",
-        namespace="Namespace1"
+        name="cm1", namespace="Namespace1"
     )
 
     mock_api_instance.list_namespace.assert_called_once()
     assert mock_api_instance.list_namespaced_config_map.call_count == 1
 
     mock_api_instance.replace_namespaced_config_map.assert_called_once_with(
-        "cm1",
-        "Namespace1",
-        existing_cm
+        "cm1", "Namespace1", existing_cm
     )
 
     assert configmap1.data == {"key": "value"}
     assert configmap1.data == existing_cm.data
 
 
-def test_configmap_with_systax_checking_and_config_file_with_double_new_line(mock_kubernetes):
+def test_configmap_with_systax_checking_and_config_file_with_double_new_line(
+    mock_kubernetes,
+):
     mock_api_instance = mock_kubernetes["mock_api_instance"]
 
     # Workaround para poder agregar name al MagicMock
@@ -78,7 +87,9 @@ def test_configmap_with_systax_checking_and_config_file_with_double_new_line(moc
     configmap1.metadata.namespace = "Namespace1"
     configmap1.metadata.labels = {"syntax-checking": "true", "config-type": "file"}
     configmap1.data = {"index.html": "una linea\\nOtraLinea\\n\\nDos separaciones"}
-    mock_api_instance.list_namespaced_config_map.return_value = MagicMock(items=[configmap1])
+    mock_api_instance.list_namespaced_config_map.return_value = MagicMock(
+        items=[configmap1]
+    )
 
     existing_cm = MagicMock()
     existing_cm.data = {}
@@ -92,21 +103,18 @@ def test_configmap_with_systax_checking_and_config_file_with_double_new_line(moc
     mock_kubernetes["mock_load_kube_config"].assert_called_once()
 
     mock_api_instance.read_namespaced_config_map.assert_called_once_with(
-        name="cm1",
-        namespace="Namespace1"
+        name="cm1", namespace="Namespace1"
     )
 
     mock_api_instance.list_namespace.assert_called_once()
     assert mock_api_instance.list_namespaced_config_map.call_count == 1
 
     mock_api_instance.replace_namespaced_config_map.assert_called_once_with(
-        "cm1",
-        "Namespace1",
-        existing_cm
+        "cm1", "Namespace1", existing_cm
     )
 
-    assert existing_cm.data["index.html"] == "una linea\\nOtraLinea\\nDos separaciones"    
-    
+    assert existing_cm.data["index.html"] == "una linea\\nOtraLinea\\nDos separaciones"
+
 
 def test_configmap_with_systax_checking_and_config_file_without_data(mock_kubernetes):
     mock_api_instance = mock_kubernetes["mock_api_instance"]
@@ -138,17 +146,14 @@ def test_configmap_with_systax_checking_and_config_file_without_data(mock_kubern
     mock_kubernetes["mock_load_kube_config"].assert_called_once()
 
     mock_api_instance.read_namespaced_config_map.assert_called_once_with(
-        name="cm1",
-        namespace="Namespace1"
+        name="cm1", namespace="Namespace1"
     )
 
     mock_api_instance.list_namespace.assert_called_once()
     assert mock_api_instance.list_namespaced_config_map.call_count == 1
 
     mock_api_instance.replace_namespaced_config_map.assert_called_once_with(
-        "cm1",
-        "Namespace1",
-        existing_cm
+        "cm1", "Namespace1", existing_cm
     )
 
     assert existing_cm.data["index.html"] == "archivo nuevo"
@@ -170,9 +175,11 @@ def test_configmap_with_systax_checking_and_config_env_with_data(mock_kubernetes
     configmap1.data = {
         "mikey": "un valor",
         "OTRAKEY": "otro valor",
-        "CONSALTO": "Con\nSalto\\nDe Linea\\n\n\n"
+        "CONSALTO": "Con\nSalto\\nDe Linea\\n\n\n",
     }
-    mock_api_instance.list_namespaced_config_map.return_value = MagicMock(items=[configmap1])
+    mock_api_instance.list_namespaced_config_map.return_value = MagicMock(
+        items=[configmap1]
+    )
 
     existing_cm = MagicMock()
     existing_cm.data = {}
@@ -186,17 +193,14 @@ def test_configmap_with_systax_checking_and_config_env_with_data(mock_kubernetes
     mock_kubernetes["mock_load_kube_config"].assert_called_once()
 
     mock_api_instance.read_namespaced_config_map.assert_called_once_with(
-        name="cm1",
-        namespace="Namespace1"
+        name="cm1", namespace="Namespace1"
     )
 
     mock_api_instance.list_namespace.assert_called_once()
     assert mock_api_instance.list_namespaced_config_map.call_count == 1
 
     mock_api_instance.replace_namespaced_config_map.assert_called_once_with(
-        "cm1",
-        "Namespace1",
-        existing_cm
+        "cm1", "Namespace1", existing_cm
     )
 
     assert existing_cm.data.get("mikey") is None
@@ -219,7 +223,9 @@ def test_configmap_with_systax_checking_and_config_env_without_data(mock_kuberne
     configmap1.metadata.namespace = "Namespace1"
     configmap1.metadata.labels = {"syntax-checking": "true", "config-type": "env"}
     configmap1.data = {}
-    mock_api_instance.list_namespaced_config_map.return_value = MagicMock(items=[configmap1])
+    mock_api_instance.list_namespaced_config_map.return_value = MagicMock(
+        items=[configmap1]
+    )
 
     existing_cm = MagicMock()
     existing_cm.data = {}
@@ -233,17 +239,14 @@ def test_configmap_with_systax_checking_and_config_env_without_data(mock_kuberne
     mock_kubernetes["mock_load_kube_config"].assert_called_once()
 
     mock_api_instance.read_namespaced_config_map.assert_called_once_with(
-        name="cm1",
-        namespace="Namespace1"
+        name="cm1", namespace="Namespace1"
     )
 
     mock_api_instance.list_namespace.assert_called_once()
     assert mock_api_instance.list_namespaced_config_map.call_count == 1
 
     mock_api_instance.replace_namespaced_config_map.assert_called_once_with(
-        "cm1",
-        "Namespace1",
-        existing_cm
+        "cm1", "Namespace1", existing_cm
     )
 
     assert existing_cm.data.get("CLAVE") == "MI VALOR"
@@ -309,4 +312,3 @@ def test_configmap_with_systax_checking_and_config_not_match(mock_kubernetes):
     assert mock_api_instance.list_namespaced_config_map.call_count == 1
 
     mock_api_instance.replace_namespaced_config_map.assert_not_called()
-

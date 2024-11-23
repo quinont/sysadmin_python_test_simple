@@ -19,11 +19,10 @@ class KubernetesAdapter(ConfigMapSource):
                 name=cm.metadata.name,
                 namespace=cm.metadata.namespace,
                 labels=cm.metadata.labels or {},
-                data=cm.data or {}
+                data=cm.data or {},
             )
             for cm in k8s_configmaps
         ]
-
 
     def update_configmap(self, configmap: Configmap) -> None:
         existing_cm = self.api_instance.read_namespaced_config_map(
@@ -32,8 +31,6 @@ class KubernetesAdapter(ConfigMapSource):
 
         existing_cm.data = configmap.data
 
-        self.api_instance.replace_namespaced_config_map( 
-            configmap.name,
-            configmap.namespace,
-            existing_cm
+        self.api_instance.replace_namespaced_config_map(
+            configmap.name, configmap.namespace, existing_cm
         )
